@@ -3,7 +3,7 @@
 	"Version": 1,
 	"VersionName": "0.1",
 	"FriendlyName": "Interaction Core",
-	"Description": "Plugin for player interaction with objects.",
+	"Description": "Plugin for player interaction with objects",
 	"Category": "For Engine",
 	"CreatedBy": "MajorT",
 	"CreatedByURL": "https://github.com/MajorTomAW",
