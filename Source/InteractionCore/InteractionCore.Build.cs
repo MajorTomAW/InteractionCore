@@ -6,21 +6,19 @@ public class InteractionCore : ModuleRules
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicDependencyModuleNames.AddRange(
-            new string[]
-            {
-                "Core",
-            }
-        );
+        PublicDependencyModuleNames.AddRange(new []
+        { 
+            "Core",
+            "GameplayAbilities",
+            "GameplayTags",
+            "GameplayTasks",
+            "UMG",
+        });
 
-        PrivateDependencyModuleNames.AddRange(
-            new string[]
-            {
-                "CoreUObject",
-                "Engine",
-                "Slate",
-                "SlateCore"
-            }
-        );
+        PrivateDependencyModuleNames.AddRange(new []
+        { 
+            "CoreUObject", 
+            "Engine",
+        });
     }
 }

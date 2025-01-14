@@ -1,17 +1,3 @@
-﻿#include "InteractionCore.h"
-
-#define LOCTEXT_NAMESPACE "FInteractionCoreModule"
-
-void FInteractionCoreModule::StartupModule()
-{
+﻿#include "Modules/ModuleManager.h"
     
-}
-
-void FInteractionCoreModule::ShutdownModule()
-{
-    
-}
-
-#undef LOCTEXT_NAMESPACE
-    
-IMPLEMENT_MODULE(FInteractionCoreModule, InteractionCore)
+IMPLEMENT_MODULE(FDefaultModuleImpl, InteractionCore)
