@@ -10,8 +10,8 @@
 	"DocsURL": "",
 	"MarketplaceURL": "",
 	"SupportURL": "",
-	"EditorCustomVirtualPath": "ForEngine",
-	"CanContainContent": true,
+	"EditorCustomVirtualPath": "Gameplay",
+	"CanContainContent": false,
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": true,
 	"Installed": false,
@@ -26,6 +26,6 @@
 		{
 			"Name": "GameplayAbilities",
 			"Enabled": true
-		}	
+		}
 	]
 }

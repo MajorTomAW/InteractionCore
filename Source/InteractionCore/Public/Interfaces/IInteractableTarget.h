@@ -26,7 +26,7 @@ public:
 	}
 
 	/** Adds a single interaction option to the list of options */
-	void AddInteractionOptions(const FInteractionOption& Option) const
+	void AddInteractionOption(const FInteractionOption& Option) const
 	{
 		FInteractionOption& OptionEntry = Options.Add_GetRef(Option);
 		OptionEntry.InteractableTarget = Interactable;
