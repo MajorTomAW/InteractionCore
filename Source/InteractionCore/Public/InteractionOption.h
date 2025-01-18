@@ -1,8 +1,10 @@
 // Copyright © 2024 MajorT. All Rights Reserved.
 
 #pragma once
+
 #include "GameplayAbilitySpecHandle.h"
 #include "Abilities/GameplayAbility.h"
+#include "AbilitySystemComponent.h"
 
 #include "InteractionOption.generated.h"
 
@@ -82,5 +84,11 @@ public:
 		Hash = HashCombine(Hash, GetTypeHash(This.TargetInteractionAbilityHandle));
 		Hash = HashCombine(Hash, GetTypeHash(This.InteractionWidgetClass));
 		return Hash;
+	}
+
+	FORCEINLINE FString ToString() const
+	{
+		return FString::Printf(TEXT("InteractableTarget: %s, InteractionAbilityToGrant: %s, TargetAbilitySystem: %s, TargetInteractionAbilityHandle: %s, InteractionWidgetClass: %s"),
+			*GetNameSafe(InteractableTarget.GetObject()), *GetNameSafe(InteractionAbilityToGrant), *GetNameSafe(TargetAbilitySystem), *TargetInteractionAbilityHandle.ToString(), *InteractionWidgetClass.ToString());
 	}
 };
