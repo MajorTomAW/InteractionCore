@@ -41,7 +41,7 @@ enum class EActorCanvasProjectionMode : uint8
  * Describes and controls an active indicator.  It is highly recommended that your widget implements
  * IActorIndicatorWidget so that it can 'bind' to the associated data.
  */
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, Blueprintable, meta = (DontUseGenericSpawnObject))
 class INDICATORSYSTEM_API UIndicatorDescriptor : public UObject
 {
 	GENERATED_BODY()
@@ -238,22 +238,26 @@ public:
 protected:
 	/** The actual spawned widget for this indicator */
 	TWeakObjectPtr<UUserWidget> IndicatorWidget;
-
-private:
+	
 	//-------------------------------------------------------------------------
 	// Properties
 	//-------------------------------------------------------------------------
+
+	
+	/** The class of the user widget to use for the indicator */
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator")
+	TSoftClassPtr<UUserWidget> IndicatorWidgetClass;
 	
 	/** Determines whether this indicator is visible or not */
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator")
 	bool bVisible = true;
 
 	/** Determines whether this indicator should be clamped to the edge of the screen */
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator")
 	bool bClampToScreen = false;
 
 	/** Determines whether this indicator should show an arrow when clamped to the edge of the screen */
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator")
 	bool bShowClampToScreenArrow = false;
 
 	/** Determines whether this indicator should override the screen position */
@@ -261,35 +265,35 @@ private:
 	bool bOverrideScreenPosition = false;
 
 	/** Determines whether this indicator should be automatically removed when the indicator component is null */
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator")
 	bool bAutoRemoveWhenIndicatorComponentIsNull = false;
 
 	/** The projection mode for this indicator */
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator|Projection")
 	EActorCanvasProjectionMode ProjectionMode = EActorCanvasProjectionMode::ComponentPoint;
 
 	/** The horizontal alignment of the indicator */
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator|Projection")
 	TEnumAsByte<EHorizontalAlignment> HAlignment = EHorizontalAlignment::HAlign_Center;
 
 	/** The vertical alignment of the indicator */
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator|Projection")
 	TEnumAsByte<EVerticalAlignment> VAlignment = EVerticalAlignment::VAlign_Center;
 
 	/** The priority of the indicator. Higher priority indicators are drawn on top of lower priority indicators */
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator")
 	int32 Priority = 0;
 
 	/** The bounding box anchor for the indicator */
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator|Positioning")
 	FVector BoundingBoxAnchor = FVector(0.5f, 0.5f, 0.5f);
 
 	/** The screen space offset for the indicator */
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator|Positioning")
 	FVector2D ScreenSpaceOffset = FVector2D::ZeroVector;
 
 	/** The world space offset for the indicator */
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator|Positioning")
 	FVector WorldPositionOffset = FVector::ZeroVector;
 
 	/** The optional data object associated with this indicator */
@@ -303,10 +307,6 @@ private:
 	/** The name of the socket on the component to use for the indicator */
 	UPROPERTY()
 	FName ComponentSocketName = NAME_None;
-
-	/** The class of the user widget to use for the indicator */
-	UPROPERTY()
-	TSoftClassPtr<UUserWidget> IndicatorWidgetClass;
 
 	/** The manager component that owns this indicator */
 	UPROPERTY()

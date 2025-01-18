@@ -7,6 +7,7 @@
 
 #include "IndicatorLibrary.generated.h"
 
+class UIndicatorDescriptor;
 class AController;
 class UIndicatorManagerComponent;
 class UObject;
@@ -19,6 +20,10 @@ class INDICATORSYSTEM_API UIndicatorLibrary : public UBlueprintFunctionLibrary
 
 public:
 	/** Find the Indicator Manager Component for the given Controller */
-	UFUNCTION(BlueprintCallable, Category = Indicator)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = IndicatorSystem)
 	static UIndicatorManagerComponent* GetIndicatorManagerComponent(AController* Controller);
+
+	/** Creates a new indicator from the given class. */
+	UFUNCTION(BlueprintCallable, Category = IndicatorSystem, meta = (AdvancedDisplay = 3, DeterminesOutputType = "IndicatorClass"))
+	static UIndicatorDescriptor* CreateIndicator(TSubclassOf<UIndicatorDescriptor> IndicatorClass, USceneComponent* TargetComponent, FName TargetSocketName, UIndicatorManagerComponent* OwnerManager, UObject* DataObject = nullptr);
 };
