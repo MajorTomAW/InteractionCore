@@ -181,8 +181,6 @@ void UAbilityTask_WaitForInteractableTargets::UpdateInteractableOptions(
 		bOptionsChanged = true;
 	}
 
-	UE_LOG(LogTemp, Error, TEXT("Update interactable options [new count %d / %d] - Changed ? %d"), NewOptions.Num(), CurrentOptions.Num(), bOptionsChanged);
-
 	if (bOptionsChanged)
 	{
 		CurrentOptions = NewOptions;
