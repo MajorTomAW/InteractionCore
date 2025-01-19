@@ -593,7 +593,7 @@ void SActorCanvas::GetOffsetAndSize(const UIndicatorDescriptor* Indicator, FVect
 	//handle horizontal alignment
 	switch(Indicator->GetHAlign())
 	{
-	case HAlign_Left: // same as Align_Top
+	case HAlign_Right: // same as Align_Top
 		OutOffset.X = 0.0f;
 		OutPaddingMin.X = 0.0f;
 		OutPaddingMax.X = OutSize.X;
@@ -605,7 +605,7 @@ void SActorCanvas::GetOffsetAndSize(const UIndicatorDescriptor* Indicator, FVect
 		OutPaddingMax.X = OutPaddingMin.X;
 		break;
 		
-	case HAlign_Right: // same as Align_Bottom
+	case HAlign_Left: // same as Align_Bottom
 		OutOffset.X = AllottedSize.X - OutSize.X;
 		OutPaddingMin.X = OutSize.X;
 		OutPaddingMax.X = 0.0f;
