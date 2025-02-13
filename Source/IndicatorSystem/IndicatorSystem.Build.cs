@@ -7,6 +7,7 @@ public class IndicatorSystem : ModuleRules
         PublicDependencyModuleNames.AddRange(new []
         {
             "Core",
+            "NetCore",
             "UMG",
             "AsyncMixin", 
             "ModularGameplay",

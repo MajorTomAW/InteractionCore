@@ -6,6 +6,7 @@
 #include "IndicatorManagerComponent.h"
 #include "Engine/LocalPlayer.h"
 #include "SceneView.h"
+#include "Net/UnrealNetwork.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(IndicatorDescriptor)
 
@@ -139,6 +140,67 @@ bool FIndicatorProjection::Project(
 
 UIndicatorDescriptor::UIndicatorDescriptor()
 {
+}
+
+UWorld* UIndicatorDescriptor::GetWorld() const
+{
+	return GetOuter()->GetWorld();
+}
+
+int32 UIndicatorDescriptor::GetFunctionCallspace(UFunction* Function, FFrame* Stack)
+{
+	if (HasAnyFlags(RF_ClassDefaultObject) || !IsSupportedForNetworking())
+	{
+		return GEngine->GetGlobalFunctionCallspace(Function, this, Stack);
+	}
+
+	check(GetOuter() != nullptr);
+	return GetOuter()->GetFunctionCallspace(Function, Stack);
+}
+
+bool UIndicatorDescriptor::CallRemoteFunction(
+	UFunction* Function, void* Parms, struct FOutParmRec* OutParms, FFrame* Stack)
+{
+	// Check for GC
+	if (!IsValid(this))
+	{
+		return false;
+	}
+
+	// We can't replicate CDOs
+	check(!HasAnyFlags(RF_ClassDefaultObject));
+	check(GetOuter() != nullptr);
+
+	AActor* Owner = CastChecked<AActor>(GetOuter());
+	bool bProcessed = false;
+
+	FWorldContext* const Context = GEngine->GetWorldContextFromWorld(GetWorld());
+	if (Context != nullptr)
+	{
+		for (FNamedNetDriver& Driver : Context->ActiveNetDrivers)
+		{
+			if (Driver.NetDriver != nullptr && Driver.NetDriver->ShouldReplicateFunction(Owner, Function))
+			{
+				Driver.NetDriver->ProcessRemoteFunction(Owner, Function, Parms, OutParms, Stack, this);
+				bProcessed = true;
+			}
+		}
+	}
+
+	return bProcessed;
+}
+
+bool UIndicatorDescriptor::IsSupportedForNetworking() const
+{
+	return GetShouldReplicate();
+}
+
+void UIndicatorDescriptor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ThisClass, WorldPositionOffset);
+	DOREPLIFETIME(ThisClass, Component);
 }
 
 void UIndicatorDescriptor::UnregisterIndicator()

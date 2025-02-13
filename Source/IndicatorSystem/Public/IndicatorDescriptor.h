@@ -4,6 +4,7 @@
 
 #include "UObject/Object.h"
 #include "Components/SceneComponent.h"
+#include "Net/Core/PushModel/PushModelMacros.h"
 #include "Types/SlateEnums.h"
 
 #include "IndicatorDescriptor.generated.h"
@@ -45,10 +46,19 @@ UCLASS(BlueprintType, Blueprintable, meta = (DontUseGenericSpawnObject))
 class INDICATORSYSTEM_API UIndicatorDescriptor : public UObject
 {
 	GENERATED_BODY()
+	REPLICATED_BASE_CLASS(UIndicatorDescriptor)
+	
 	friend class SActorCanvas;
 
 public:
 	UIndicatorDescriptor();
+
+	//~ Begin UObject Interface
+	virtual UWorld* GetWorld() const override;
+	virtual int32 GetFunctionCallspace(UFunction* Function, FFrame* Stack) override;
+	virtual bool CallRemoteFunction(UFunction* Function, void* Parms, struct FOutParmRec* OutParms, FFrame* Stack) override;
+	virtual bool IsSupportedForNetworking() const override;
+	//~ End UObject Interface
 
 	/** Unregisters this indicator from the manager */
 	UFUNCTION(BlueprintCallable, Category = IndicatorSystem)
@@ -121,6 +131,10 @@ public:
 	{
 		bVisible = InVisible;
 	}
+
+	/** Returns whether this indicator should replicate to others */
+	UFUNCTION(BlueprintCallable, Category = IndicatorSystem)
+	bool GetShouldReplicate() const { return bShouldReplicate; }
 
 	/** Returns the projection mode for this indicator */
 	UFUNCTION(BlueprintCallable, Category = IndicatorSystem)
@@ -252,6 +266,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Indicator")
 	bool bVisible = true;
 
+	/** Determines whether this indicator should replicate to others */
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator", AdvancedDisplay)
+	bool bShouldReplicate = true;
+
 	/** Determines whether this indicator should be clamped to the edge of the screen */
 	UPROPERTY(EditDefaultsOnly, Category = "Indicator")
 	bool bClampToScreen = false;
@@ -293,7 +311,7 @@ protected:
 	FVector2D ScreenSpaceOffset = FVector2D::ZeroVector;
 
 	/** The world space offset for the indicator */
-	UPROPERTY(EditDefaultsOnly, Category = "Indicator|Positioning")
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator|Positioning", Replicated)
 	FVector WorldPositionOffset = FVector::ZeroVector;
 
 	/** The optional data object associated with this indicator */
@@ -301,7 +319,7 @@ protected:
 	TObjectPtr<UObject> DataObject;
 
 	/** The scene component associated with this indicator */
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	TObjectPtr<USceneComponent> Component;
 
 	/** The name of the socket on the component to use for the indicator */

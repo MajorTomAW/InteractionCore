@@ -5,6 +5,7 @@
 #include "IndicatorManagerComponent.h"
 
 #include "IndicatorDescriptor.h"
+#include "IndicatorSubsystem.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(IndicatorManagerComponent)
 
@@ -25,6 +26,8 @@ void UIndicatorManagerComponent::AddIndicator(UIndicatorDescriptor* IndicatorDes
 	IndicatorDescriptor->SetManagerComponent(this);
 	OnIndicatorAdded.Broadcast(IndicatorDescriptor);
 	Indicators.Add(IndicatorDescriptor);
+	/*UE_LOG(LogTemp, Error, TEXT("New Indicator: %s\nTargetCop: %s\nOffset: %s")
+		, *GetNameSafe(IndicatorDescriptor), *GetNameSafe(IndicatorDescriptor->GetSceneComponent()), *IndicatorDescriptor->GetWorldPositionOffset().ToString());*/
 }
 
 void UIndicatorManagerComponent::RemoveIndicator(UIndicatorDescriptor* IndicatorDescriptor)
@@ -36,4 +39,24 @@ void UIndicatorManagerComponent::RemoveIndicator(UIndicatorDescriptor* Indicator
 		OnIndicatorRemoved.Broadcast(IndicatorDescriptor);
 		Indicators.Remove(IndicatorDescriptor);
 	}
+}
+
+void UIndicatorManagerComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (UIndicatorSubsystem* IndicatorSub = UIndicatorSubsystem::Get(this))
+	{
+		IndicatorSub->RegisterIndicatorManager(this);
+	}
+}
+
+void UIndicatorManagerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (UIndicatorSubsystem* IndicatorSub = UIndicatorSubsystem::Get(this))
+	{
+		IndicatorSub->UnregisterIndicatorManager(this);
+	}
+	
+	Super::EndPlay(EndPlayReason);
 }

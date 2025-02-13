@@ -52,6 +52,12 @@ public:
 	const TArray<UIndicatorDescriptor*>& GetIndicators() const { return Indicators; }
 
 protected:
+	//~ Begin UActorComponent Interface
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	//~ End UActorComponent Interface
+
+protected:
 	/** Delegate for when an indicator is added */
 	FIndicatorEvent OnIndicatorAdded;
 
