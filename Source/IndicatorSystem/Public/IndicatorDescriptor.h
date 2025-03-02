@@ -180,6 +180,28 @@ public:
 		bClampToScreen = bValue;
 	}
 
+	/** Returns whether this indicator should be hidden at a certain distance */
+	UFUNCTION(BlueprintCallable, Category = IndicatorSystem)
+	bool GetHasMaxDrawDistance() const { return bHideAtDistance; }
+
+	/** Sets whether this indicator should be hidden at a certain distance */
+	UFUNCTION(BlueprintCallable, Category = IndicatorSystem)
+	void SetHideAtDistance(bool bValue)
+	{
+		bHideAtDistance = bValue;
+	}
+
+	/** Returns the distance at which this indicator should be hidden */
+	UFUNCTION(BlueprintCallable, Category = IndicatorSystem)
+	float GetMaxDrawDistance() const { return MaxDrawDistance; }
+
+	/** Sets the distance at which this indicator should be hidden */
+	UFUNCTION(BlueprintCallable, Category = IndicatorSystem)
+	void SetMaxDrawDistance(float Distance)
+	{
+		MaxDrawDistance = Distance;
+	}
+
 	/** Returns whether this indicator should show an arrow when clamped to the edge of the screen */
 	UFUNCTION(BlueprintCallable, Category = IndicatorSystem)
 	bool GetShowClampToScreenArrow() const { return bShowClampToScreenArrow; }
@@ -277,6 +299,14 @@ protected:
 	/** Determines whether this indicator should show an arrow when clamped to the edge of the screen */
 	UPROPERTY(EditDefaultsOnly, Category = "Indicator")
 	bool bShowClampToScreenArrow = false;
+
+	/** Determines whether this indicator should be hidden at a certain distance */
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator", meta=(InlineEditConditionToggle))
+	bool bHideAtDistance = false;
+
+	/** The distance at which this indicator should be hidden */
+	UPROPERTY(EditDefaultsOnly, Category = "Indicator", meta=(EditCondition="bHideAtDistance",Units=cm))
+	float MaxDrawDistance = 1000.0f;
 
 	/** Determines whether this indicator should override the screen position */
 	UPROPERTY()

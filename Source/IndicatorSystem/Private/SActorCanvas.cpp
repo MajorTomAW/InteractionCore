@@ -147,8 +147,23 @@ EActiveTimerReturnType SActorCanvas::UpdateCanvas(double InCurrentTime, float In
 					continue;
 				}
 
-				// Update the indicator's visibility
-				CurChild.SetIsIndicatorVisible(Indicator->GetIsVisible());
+				// Update the indicator's visibility, also respecting the distance at which it should be hidden
+				const APlayerController* PlayerController = LocalPlayerContext.GetPlayerController();
+				const AActor* Owner = PlayerController ? PlayerController->GetPawn() : nullptr;
+				
+				bool bShouldBeVisible = Indicator->GetIsVisible();
+				
+				if (IsValid(Owner) && bShouldBeVisible && Indicator->GetHasMaxDrawDistance())
+				{
+					// Calculate the distance between the owner and the indicator
+					const FVector OwnerLocation = Owner->GetActorLocation();
+					const FVector IndicatorLocation =
+						Indicator->GetSceneComponent()->GetComponentLocation() + Indicator->GetWorldPositionOffset();
+
+					float Distance = FVector::Dist(OwnerLocation, IndicatorLocation);
+					bShouldBeVisible = Distance < Indicator->GetMaxDrawDistance();
+				}
+				CurChild.SetIsIndicatorVisible(bShouldBeVisible);
 
 				if (!CurChild.GetIsIndicatorVisible())
 				{
